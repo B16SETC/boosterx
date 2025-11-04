@@ -699,7 +699,7 @@
             `
         };
 
-        // Navigation function
+        // Navigation function with URL routing
         let currentPage = null;
 
         function navigateTo(page) {
@@ -712,6 +712,10 @@
             // Close mobile menu
             menuToggle.classList.remove('active');
             navLinks.classList.remove('active');
+            
+            // Update URL
+            const path = page === 'home' ? '/' : `/${page}`;
+            window.history.pushState({ page }, '', path);
             
             // Only fade if we're already on a page (not initial load)
             if (currentPage !== null) {
@@ -738,6 +742,32 @@
                 currentPage = page;
                 observeCards();
             }
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.page) {
+                navigateTo(event.state.page);
+            } else {
+                // Default to home if no state
+                navigateTo('home');
+            }
+        });
+
+        // Handle direct URL navigation
+        function handleInitialRoute() {
+            const path = window.location.pathname;
+            let page = 'home';
+            
+            if (path === '/vehicles') {
+                page = 'vehicles';
+            } else if (path === '/launches') {
+                page = 'launches';
+            } else if (path === '/contact') {
+                page = 'contact';
+            }
+            
+            navigateTo(page);
         }
 
         // Intersection Observer for cards
@@ -791,9 +821,9 @@
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
         
-        // Initialize the app - FIXED: Load home page immediately
+        // Initialize the app with routing
         document.addEventListener('DOMContentLoaded', () => {
-            navigateTo('home');
+            handleInitialRoute();
             
             // Set up scroll effect after page loads
             window.addEventListener('scroll', () => {
