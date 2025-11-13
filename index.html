@@ -528,6 +528,88 @@
         .text-link:hover {
             color: #4ecdc4;
         }
+
+        /* New styles for vehicle detail pages */
+        .stage-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stage-button {
+            padding: 1.5rem 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .stage-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.5);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 2rem 0;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .component-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .component-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .component-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .component-card-content {
+            padding: 2rem;
+        }
+
+        .component-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .component-card p {
+            color: #b8b8b8;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -639,12 +721,109 @@
         </div>
         <section style="padding-top: 2rem;">
             <div class="cards">
-                <div class="card">
+                <div class="card" onclick="goToPage('skylynx-detail')" style="cursor: pointer;">
                     <div class="card-icon">🚀</div>
                     <h3>SkyLynx</h3>
-                    <p><strong>Light-Lift Vehicle</strong> The first rocket of our copamny. Capable of getting ~25 tons of payload to orbit.</p>
+                    <p><strong>Light-Lift Vehicle</strong> The first rocket of our company. Capable of getting ~25 tons of payload to orbit.</p>
                     <div style="margin-top: 1.5rem; color: #667eea; font-weight: 600;">
                         Height: 41.1m | Diameter: 3m | Engines: 1 On Each Stage
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- SKYLYNX DETAIL PAGE -->
+    <div id="skylynx-detail-page" class="page">
+        <div class="page-hero">
+            <a class="back-button" onclick="goToPage('vehicles')">← Back to Vehicles</a>
+            <h1>SkyLynx</h1>
+            <p class="section-subtitle">Light-Lift Vehicle Components</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="stage-buttons">
+                <button class="stage-button" onclick="goToPage('skylynx-first-stages')">First Stages</button>
+                <button class="stage-button" onclick="goToPage('skylynx-second-stages')">Second Stages</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- SKYLYNX FIRST STAGES PAGE -->
+    <div id="skylynx-first-stages-page" class="page">
+        <div class="page-hero">
+            <a class="back-button" onclick="goToPage('skylynx-detail')">← Back to SkyLynx</a>
+            <h1>SkyLynx First Stages</h1>
+            <p class="section-subtitle">Reusable first stage components</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="cards">
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/667eea/ffffff?text=First+Stage+Main+Body" alt="First Stage Main Body">
+                    <div class="component-card-content">
+                        <h3>Main Body Structure</h3>
+                        <p>Constructed from advanced carbon composite materials, the main body provides structural integrity while minimizing weight. Features integrated avionics bays and propellant tank systems.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/764ba2/ffffff?text=First+Stage+Engine" alt="First Stage Engine">
+                    <div class="component-card-content">
+                        <h3>Main Engine Assembly</h3>
+                        <p>High-thrust liquid fuel engine with deep throttling capability and gimbal control for precise trajectory adjustments. Features advanced cooling systems for extended burn times.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/f093fb/ffffff?text=Landing+Gear" alt="Landing Gear">
+                    <div class="component-card-content">
+                        <h3>Landing System</h3>
+                        <p>Retractable carbon-composite landing legs with hydraulic dampening systems. Designed for multiple reuses with minimal refurbishment between flights.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/4ecdc4/ffffff?text=Grid+Fins" alt="Grid Fins">
+                    <div class="component-card-content">
+                        <h3>Aerodynamic Control Surfaces</h3>
+                        <p>Titanium grid fins for precise atmospheric control during descent. Deployable immediately after stage separation for controlled reentry and landing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- SKYLYNX SECOND STAGES PAGE -->
+    <div id="skylynx-second-stages-page" class="page">
+        <div class="page-hero">
+            <a class="back-button" onclick="goToPage('skylynx-detail')">← Back to SkyLynx</a>
+            <h1>SkyLynx Second Stages</h1>
+            <p class="section-subtitle">Upper stage and payload deployment systems</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="cards">
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/667eea/ffffff?text=Second+Stage+Main+Body" alt="Second Stage Main Body">
+                    <div class="component-card-content">
+                        <h3>Upper Stage Structure</h3>
+                        <p>Lightweight aluminum-lithium alloy construction with integrated propellant tanks. Designed for maximum payload volume while maintaining structural integrity during high-G maneuvers.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/764ba2/ffffff?text=Vacuum+Engine" alt="Vacuum Engine">
+                    <div class="component-card-content">
+                        <h3>Vacuum-Optimized Engine</h3>
+                        <p>High-efficiency vacuum engine with extended nozzle for optimal performance in space. Capable of multiple restarts for precise orbital insertion and trajectory adjustments.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/f093fb/ffffff?text=Payload+Fairing" alt="Payload Fairing">
+                    <div class="component-card-content">
+                        <h3>Payload Fairing</h3>
+                        <p>Carbon composite fairing with acoustic damping system to protect delicate payloads. Jettison system ensures clean separation without imparting significant forces on the payload.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/4ecdc4/ffffff?text=Avionics+Bay" alt="Avionics Bay">
+                    <div class="component-card-content">
+                        <h3>Avionics and Control Systems</h3>
+                        <p>Redundant flight computers, inertial navigation systems, and communication equipment. Provides autonomous guidance, navigation, and control throughout the mission.</p>
                     </div>
                 </div>
             </div>
@@ -661,14 +840,14 @@
             <div class="cards">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-                        <h3>SkyLynx Flight Test 1</h3>
-                        <span class="mission-badge">Completed</span>
+                        <h3>SkyLynx Flight Test 2</h3>
+                        <span class="mission-badge">Upcoming</span>
                     </div>
-                    <p style="color: #667eea; margin-bottom: 0.5rem;">November 9, 2025 • Cape Canaveral</p>
+                    <p style="color: #667eea; margin-bottom: 0.5rem;">November 13, 2025 • Cape Canaveral</p>
                     <div class="countdown-container">
-               <!-- <p style="color: #667eea; margin-bottom: 0.5rem; font-size: 1.4rem; font-weight: 700;">T-minus</p> -->
+                    <p style="color: #667eea; margin-bottom: 0.5rem; font-size: 1.4rem; font-weight: 700;">T-minus</p>
                     <div class="countdown" id="countdown">
-                   <!-- <div class="countdown-item">
+                        <div class="countdown-item">
                             <div class="countdown-value" id="days">00</div>
                             <div class="countdown-label">Days</div>
                         </div>
@@ -683,7 +862,24 @@
                         <div class="countdown-item">
                             <div class="countdown-value" id="seconds">00</div>
                             <div class="countdown-label">Seconds</div>
-                        </div> -->
+                        </div>
+                    </div>
+                </div>
+                    <p>The second flight test of SkyLynx. This time except for getting to orbit we also wanna deploy a satellite too.</p>
+                    <p>On our our company's <a href="https://www.twitch.tv/superheavybooster" class="text-link">Twitch channel!</a></p>
+                </div>
+            </div>
+        </section>
+        <section style="padding-top: 2rem;">
+            <div class="cards">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                        <h3>SkyLynx Flight Test 1</h3>
+                        <span class="mission-badge">Completed</span>
+                    </div>
+                    <p style="color: #667eea; margin-bottom: 0.5rem;">November 9, 2025 • Cape Canaveral</p>
+                    <div class="countdown-container">
+                    <div class="countdown" id="countdown">
                     </div>
                 </div>
                     <p>The first flight test of SkyLynx. The vehicle lifted off nominally with the main engine and all 4 SRBs running normally. At T+55 seconds into the flight something was visibly ripped off the rocket. After that though the 4 SRBs separated nominally and flew away. After that though at T+1 minute and 7 seconds the main engine's gimbal locked at a weird placement and the gimbal was very limited. Although that didn't stop the rocket as it got to stage separation where the second engine started nominally but the second stage then started spinning out of control and at T+4 minutes and 24 seconds the FTS was triggered and the second stage was destroyed. The first stage and boosters had a hard splashdown downrange in the Atlantic ocean. We collected a lot of data from this flight and we hope to have a successful flight next time.</p>
@@ -733,33 +929,33 @@
         }
 
         // Page navigation
-    function goToPage(pageName) {
-        // Hide all pages
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(p => p.classList.remove('active'));
-        
-        // Show selected page
-        const targetPage = document.getElementById(pageName + '-page');
-        if (targetPage) {
-            targetPage.classList.add('active');
+        function goToPage(pageName) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageName + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Update URL hash (remove hash for home page)
+            if (pageName === 'home') {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            } else {
+                window.location.hash = pageName;
+            }
+            
+            // Close mobile menu
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
-        // Update URL hash (remove hash for home page)
-        if (pageName === 'home') {
-            history.pushState("", document.title, window.location.pathname + window.location.search);
-        } else {
-            window.location.hash = pageName;
-        }
-        
-        // Close mobile menu
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-        menuToggle.classList.remove('active');
-        navLinks.classList.remove('active');
-        
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
 
         // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
@@ -791,7 +987,7 @@
 
         // Countdown timer
         function updateCountdown() {
-            const launchDate = new Date('November 9, 2025 12:15:00 UTC').getTime();
+            const launchDate = new Date('November 13, 2025 18:30:00 UTC').getTime();
 
             setInterval(() => {
                 const now = new Date().getTime();
