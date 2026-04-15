@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booster 16 Space Exploration Technologies Corporation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 5%;
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            transition: all 0.3s;
+            border-radius: 3px;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .page {
+            display: none;
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(102, 126, 234, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: #b8b8b8;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.5);
+        }
+
+        section {
+            position: relative;
+            padding: 8rem 5%;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: #888;
+            margin-bottom: 4rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .card:hover:before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p {
+            color: #b8b8b8;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .tech-item:hover {
+            transform: scale(1.05);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .tech-item h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .stat {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-hero {
+            padding: 12rem 5% 6rem;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .contact-card {
+            background: rgba(102, 126, 234, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .contact-card .icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card a {
+            color: #b8b8b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-card a:hover {
+            color: #667eea;
+        }
+
+        .response-time {
+            text-align: center;
+            color: #888;
+            font-size: 1.1rem;
+            margin: 2rem 0;
+        }
+
+        .response-time strong {
+            color: #667eea;
+        }
+
+        .mission-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .mission-badge-failure {
+            background: linear-gradient(135deg, #ff0000 0%, #764ba2 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .mission-badge-success {
+            background: linear-gradient(135deg, #48ff00 0%, #764ba2 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .mission-badge-partial-success {
+            background: linear-gradient(135deg, #ffee00 0%, #764ba2 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .mission-badge.success {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .countdown-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            min-width: 100px;
+        }
+
+        .countdown-value {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 3rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 70%;
+                max-width: 300px;
+                height: calc(100vh - 70px);
+                background: rgba(0, 0, 0, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 3rem 2rem;
+                gap: 2rem;
+                transition: right 0.4s ease;
+                border-left: 1px solid rgba(102, 126, 234, 0.3);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+            }
+            
+            section {
+                padding: 5rem 5%;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .page-hero {
+                padding: 10rem 5% 4rem;
+            }
+        }
+
+        .text-link {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .text-link:hover {
+            color: #4ecdc4;
+        }
+
+        .stage-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stage-button {
+            padding: 1.5rem 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .stage-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.5);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 2rem 0;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .component-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .component-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .component-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .component-card-content {
+            padding: 2rem;
+        }
+
+        .component-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .component-card p {
+            color: #b8b8b8;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <nav id="navbar">
+        <div class="logo" onclick="goToPage('home')">BOOSTER 16 SPACE EXPLORATION TECHNOLOGIES</div>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a onclick="goToPage('home')">Home</a></li>
+            <li><a onclick="goToPage('vehicles')">Vehicles</a></li>
+            <li><a onclick="goToPage('launches')">Launches</a></li>
+            <li><a onclick="goToPage('contact')">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <div id="home-page" class="page active">
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <h1>Beyond the Horizon</h1>
+                <p>Advanced launch solutions for the next era of space exploration</p>
+                <button class="cta-button" onclick="goToPage('contact')">Get in Touch</button>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Launch Services</h2>
+            <p class="section-subtitle">Precision. Reliability. Innovation.</p>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-icon">🚀</div>
+                    <h3>Heavy Lift</h3>
+                    <p>Deploy massive payloads to orbit with our next-generation heavy-lift vehicles. Optimized for large satellites, space station modules, and deep space missions.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🛰️</div>
+                    <h3>Satellite Deployment</h3>
+                    <p>Flexible launch windows and precise orbital insertion for communications, Earth observation, and scientific satellites of all sizes.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌙</div>
+                    <h3>Deep Space Missions</h3>
+                    <p>Enabling exploration beyond Earth orbit with specialized launch profiles for lunar, Mars, and interplanetary missions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Advanced Rocket Technology</h2>
+            <p class="section-subtitle">Engineering the impossible into reality</p>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>Reusable Systems</h4>
+                    <div class="stat">100%</div>
+                    <p>First-stage recovery rate</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Payload Capacity</h4>
+                    <div class="stat">75t</div>
+                    <p>To low Earth orbit</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Launch Cadence</h4>
+                    <div class="stat">48+</div>
+                    <p>Launches per year</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Propulsion</h4>
+                    <div class="stat">99.8%</div>
+                    <p>Engine reliability</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Research & Development</h2>
+            <p class="section-subtitle">Pioneering tomorrow's space technologies</p>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-icon">🔬</div>
+                    <h3>Advanced Propulsion</h3>
+                    <p>Developing next-generation engine technologies including methane-oxygen systems and electric propulsion for deep space exploration.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🤖</div>
+                    <h3>Autonomous Systems</h3>
+                    <p>AI-driven launch sequencing, real-time trajectory optimization, and automated landing systems for maximum precision and safety.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">♻️</div>
+                    <h3>Sustainable Spaceflight</h3>
+                    <p>Researching carbon-neutral propellants, in-orbit refueling technologies, and closed-loop life support systems for long-duration missions.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- VEHICLES PAGE -->
+    <div id="vehicles-page" class="page">
+        <div class="page-hero">
+            <h1>Our Fleet</h1>
+            <p class="section-subtitle">Next-generation launch vehicles engineered for performance</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="cards">
+                <div class="card" onclick="goToPage('SkyLynx-1-detail')" style="cursor: pointer;">
+                    <div class="card-icon">🚀</div>
+                    <h3>SkyLynx-1</h3>
+                    <p><strong>Light-Lift Vehicle</strong> The first rocket of our company. Capable of getting ~25 tons of payload to orbit.</p>
+                    <div style="margin-top: 1.5rem; color: #667eea; font-weight: 600;">
+                        Height: 41.1m | Diameter: 3m | Engines: 1 On Each Stage
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- SkyLynx-1 DETAIL PAGE -->
+    <div id="SkyLynx-1-detail-page" class="page">
+        <div class="page-hero">
+            <a class="back-button" onclick="goToPage('vehicles')">← Back to Vehicles</a>
+            <h1>SkyLynx-1</h1>
+            <p class="section-subtitle">Light-Lift Vehicle Components</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="stage-buttons">
+                <button class="stage-button" onclick="goToPage('SkyLynx-1-first-stages')">First Stages</button>
+                <button class="stage-button" onclick="goToPage('SkyLynx-1-second-stages')">Second Stages</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- SkyLynx-1 FIRST STAGES PAGE -->
+    <div id="SkyLynx-1-first-stages-page" class="page">
+        <div class="page-hero">
+            <a class="back-button" onclick="goToPage('SkyLynx-1-detail')">← Back to SkyLynx-1</a>
+            <h1>SkyLynx-1 First Stages</h1>
+            <p class="section-subtitle">Reusable first stage components</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="cards">
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/667eea/ffffff?text=First+Stage+Main+Body" alt="First Stage Main Body">
+                    <div class="component-card-content">
+                        <h3>Main Body Structure</h3>
+                        <p>Constructed from advanced carbon composite materials, the main body provides structural integrity while minimizing weight. Features integrated avionics bays and propellant tank systems.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/764ba2/ffffff?text=First+Stage+Engine" alt="First Stage Engine">
+                    <div class="component-card-content">
+                        <h3>Main Engine Assembly</h3>
+                        <p>High-thrust liquid fuel engine with deep throttling capability and gimbal control for precise trajectory adjustments. Features advanced cooling systems for extended burn times.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/f093fb/ffffff?text=Landing+Gear" alt="Landing Gear">
+                    <div class="component-card-content">
+                        <h3>Landing System</h3>
+                        <p>Retractable carbon-composite landing legs with hydraulic dampening systems. Designed for multiple reuses with minimal refurbishment between flights.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/4ecdc4/ffffff?text=Grid+Fins" alt="Grid Fins">
+                    <div class="component-card-content">
+                        <h3>Aerodynamic Control Surfaces</h3>
+                        <p>Titanium grid fins for precise atmospheric control during descent. Deployable immediately after stage separation for controlled reentry and landing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- SkyLynx-1 SECOND STAGES PAGE -->
+    <div id="SkyLynx-1-second-stages-page" class="page">
+        <div class="page-hero">
+            <a class="back-button" onclick="goToPage('SkyLynx-1-detail')">← Back to SkyLynx-1</a>
+            <h1>SkyLynx-1 Second Stages</h1>
+            <p class="section-subtitle">Upper stage and payload deployment systems</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="cards">
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/667eea/ffffff?text=Second+Stage+Main+Body" alt="Second Stage Main Body">
+                    <div class="component-card-content">
+                        <h3>Upper Stage Structure</h3>
+                        <p>Lightweight aluminum-lithium alloy construction with integrated propellant tanks. Designed for maximum payload volume while maintaining structural integrity during high-G maneuvers.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/764ba2/ffffff?text=Vacuum+Engine" alt="Vacuum Engine">
+                    <div class="component-card-content">
+                        <h3>Vacuum-Optimized Engine</h3>
+                        <p>High-efficiency vacuum engine with extended nozzle for optimal performance in space. Capable of multiple restarts for precise orbital insertion and trajectory adjustments.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/f093fb/ffffff?text=Payload+Fairing" alt="Payload Fairing">
+                    <div class="component-card-content">
+                        <h3>Payload Fairing</h3>
+                        <p>Carbon composite fairing with acoustic damping system to protect delicate payloads. Jettison system ensures clean separation without imparting significant forces on the payload.</p>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <img src="https://via.placeholder.com/400x200/4ecdc4/ffffff?text=Avionics+Bay" alt="Avionics Bay">
+                    <div class="component-card-content">
+                        <h3>Avionics and Control Systems</h3>
+                        <p>Redundant flight computers, inertial navigation systems, and communication equipment. Provides autonomous guidance, navigation, and control throughout the mission.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- LAUNCHES PAGE -->
+    <div id="launches-page" class="page">
+        <div class="page-hero">
+            <h1>Launch Manifest</h1>
+            <p class="section-subtitle">Upcoming missions and recent achievements</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div id="missions-container">
+                <div style="text-align:center; color:#888; padding: 4rem;">Loading missions...</div>
+            </div>
+        </section>
+    </div>
+
+        <!-- CONTACT PAGE -->
+    <div id="contact-page" class="page">
+        <div class="page-hero">
+            <h1>Get in Touch</h1>
+            <p class="section-subtitle">Let's make your mission a reality</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="icon">📧</div>
+                    <h3>Email</h3>
+                    <a href="/cdn-cgi/l/email-protection#adcfc2c2ded9c8df9c9bdec8d9cec2dfddc2dfccd9c4c2c3edcac0ccc4c183cec2c0"><span class="__cf_email__" data-cfemail="b9dbd6d6cacddccb888fcadccddad6cbc9d6cbd8cdd0d6d7f9ded4d8d0d597dad6d4">[email&#160;protected]</span></a>
+                </div>
+            </div>
+            <div class="response-time">
+                ⏱️ <strong>We typically respond within 24 hours</strong>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Booster 16 Space Exploration Technologies Corporation. All rights reserved.</p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // ── Worker proxy config ──────────────────────────────────────────────
+        // Set this to your Cloudflare Worker URL. No Firebase credentials here.
+        const WORKER_URL = 'https://b16-admin-worker.b16setc.workers.dev';
+
+        // Lightweight Firebase-over-Worker client.
+        // Mimics the database.ref() patterns used below so minimal code changes needed.
+        const database = (() => {
+            // In-memory listeners: path -> [callback, ...]
+            const listeners = {};
+            // Polling interval per watched path (ms)
+            const POLL_MS = 3000;
+            const polls = {};
+
+            async function workerGet(path) {
+                const res = await fetch(WORKER_URL + '/data' + (path === '/' ? '' : path));
+                if (!res.ok) throw new Error('Worker GET failed: ' + res.status);
+                return res.json();
+            }
+
+            async function workerPatch(path, data) {
+                const res = await fetch(WORKER_URL + '/data' + path, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+                if (!res.ok) throw new Error('Worker PATCH failed: ' + res.status);
+            }
+
+            async function workerDelete(path) {
+                const res = await fetch(WORKER_URL + '/data' + path, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Worker DELETE failed: ' + res.status);
+            }
+
+            // Start polling a path and notify listeners
+            function ensurePolling(path) {
+                if (polls[path]) return;
+                const tick = async () => {
+                    try {
+                        let data = await workerGet(path);
+                        // If path is /missions, sort by order like orderByChild('order')
+                        (listeners[path] || []).forEach(cb => cb(data));
+                    } catch(e) { console.error('Poll error', path, e); }
+                };
+                tick(); // immediate first call
+                polls[path] = setInterval(tick, POLL_MS);
+            }
+
+            // ref() returns an object mimicking Firebase ref API
+            function ref(path) {
+                const normPath = '/' + path.replace(/^\//, '');
+                return {
+                    // Real-time listener (polls)
+                    on(event, callback) {
+                        if (!listeners[normPath]) listeners[normPath] = [];
+                        // Wrap callback to match Firebase snapshot shape
+                        const wrapped = (data) => {
+                            callback(makeSnap(normPath, data));
+                        };
+                        listeners[normPath].push(wrapped);
+                        ensurePolling(normPath);
+                    },
+                    // One-time read
+                    once(event) {
+                        return workerGet(normPath).then(data => makeSnap(normPath, data));
+                    },
+                    // Write (set = full replace → use PATCH on whole node)
+                    set(data) {
+                        return workerPatch(normPath, data);
+                    },
+                    // Remove
+                    remove() {
+                        return workerDelete(normPath);
+                    },
+                    // Push = generate key + set
+                    push() {
+                        const newKey = 'mission_' + Date.now();
+                        const newPath = normPath + '/' + newKey;
+                        return {
+                            set(data) { return workerPatch(newPath, data); }
+                        };
+                    },
+                    // orderByChild — returns same ref, sorting handled in snap
+                    orderByChild(child) { return this; },
+                };
+            }
+
+            // Snapshot-like object
+            function makeSnap(path, data) {
+                return {
+                    val() { return data; },
+                    exists() { return data !== null && data !== undefined; },
+                    forEach(cb) {
+                        if (!data || typeof data !== 'object') return;
+                        // Sort by .order if present
+                        const entries = Object.entries(data);
+                        entries.sort(([,a],[,b]) => (a?.order ?? 999) - (b?.order ?? 999));
+                        entries.forEach(([key, val]) => {
+                            cb({ key, val() { return val; } });
+                        });
+                    },
+                    get key() { return path.split('/').pop(); }
+                };
+            }
+
+            return { ref };
+        })();
+
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Page navigation
+        function goToPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById(pageName + '-page');
+            if (targetPage) targetPage.classList.add('active');
+            if (pageName === 'home') {
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            } else {
+                window.location.hash = pageName;
+            }
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Mobile menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Navbar scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 100);
+        });
+
+        // =====================================================================
+        // ADMIN
+        // =====================================================================
+        // Admin panel is now in the separate b16-admin.html file.
+        // No password stored here.
+        let holdStartTime = null;
+        let timeAtHold = null;
+        let countdownTimers = {};  // missionId -> intervalId
+
+
+
+        function updateAdminButton() {
+            const btn = document.getElementById('admin-hold-btn');
+            if (!btn || !database) return;
+            database.ref('countdown-hold').once('value').then((snapshot) => {
+                const hold = snapshot.val();
+                if (hold && hold.isHeld) {
+                    btn.textContent = 'RESUME COUNTDOWN';
+                    btn.style.background = 'linear-gradient(135deg,#4ecdc4,#44a08d)';
+                } else {
+                    btn.textContent = 'HOLD COUNTDOWN';
+                    btn.style.background = 'linear-gradient(135deg,#ff6b6b,#ee5a6f)';
+                }
+            });
+        }
+
+
+        function toggleHold() {
+            if (!database) return;
+            database.ref('countdown-hold').once('value').then((snapshot) => {
+                const currentHold = snapshot.val() || { isHeld: false, totalHoldDuration: 0 };
+                const now = Date.now();
+                if (currentHold.isHeld) {
+                    const holdDuration = now - currentHold.holdStartTime;
+                    database.ref('countdown-hold').set({
+                        isHeld: false, holdStartTime: null, timeAtHold: null,
+                        totalHoldDuration: (currentHold.totalHoldDuration || 0) + holdDuration
+                    });
+                } else {
+                    // For hold, we use the active mission's launch date
+                    database.ref('missions').orderByChild('order').once('value').then(snap => {
+                        let activeLaunchMs = null;
+                        snap.forEach(child => {
+                            const m = child.val();
+                            if (m.status === 'upcoming' && m.launchTimestamp && !activeLaunchMs) {
+                                activeLaunchMs = m.launchTimestamp + (currentHold.totalHoldDuration || 0);
+                            }
+                        });
+                        const distance = activeLaunchMs ? activeLaunchMs - now : 0;
+                        database.ref('countdown-hold').set({
+                            isHeld: true, holdStartTime: now, timeAtHold: distance,
+                            totalHoldDuration: currentHold.totalHoldDuration || 0
+                        });
+                    });
+                }
+                updateAdminButton();
+            });
+        }
+
+        // =====================================================================
+        // MISSION RENDERING FROM FIREBASE
+        // =====================================================================
+        const STATUS_MAP = {
+            'upcoming':       { label: 'Upcoming',                    cls: 'mission-badge' },
+            'success':        { label: 'Completed | Success',         cls: 'mission-badge-success' },
+            'partial-success':{ label: 'Completed | Partial Success', cls: 'mission-badge-partial-success' },
+            'failure':        { label: 'Completed | Failure',         cls: 'mission-badge-failure' },
+        };
+
+        function buildCountdownId(missionId) { return 'cd-' + missionId; }
+
+        function renderMissions(missions) {
+            // Clear old timers
+            Object.values(countdownTimers).forEach(clearInterval);
+            countdownTimers = {};
+
+            const container = document.getElementById('missions-container');
+            if (!missions || missions.length === 0) {
+                container.innerHTML = '<div style="text-align:center;color:#888;padding:4rem;">No missions yet.</div>';
+                return;
+            }
+
+            container.innerHTML = missions.map(m => {
+                const statusInfo = STATUS_MAP[m.status] || STATUS_MAP['upcoming'];
+                const hasCountdown = m.status === 'upcoming' && m.launchTimestamp;
+                const cdId = buildCountdownId(m.id);
+                const descHtml = (m.description || '').replace(/\n/g, '<br>');
+                const watchHtml = m.watchUrl
+                    ? `<p>Where you can watch the rocket launch?</p><p>On our company's <a href="${m.watchUrl}" class="text-link">${m.watchLabel || m.watchUrl}!</a></p>`
+                    : '';
+                const countdownHtml = hasCountdown ? `
+                    <div class="countdown-container">
+                        <p id="${cdId}-label" style="color:#667eea;margin-bottom:0.5rem;font-size:1.4rem;font-weight:700;">T-</p>
+                        <div class="countdown">
+                            <div class="countdown-item"><div class="countdown-value" id="${cdId}-d">00</div><div class="countdown-label">Days</div></div>
+                            <div class="countdown-item"><div class="countdown-value" id="${cdId}-h">00</div><div class="countdown-label">Hours</div></div>
+                            <div class="countdown-item"><div class="countdown-value" id="${cdId}-m">00</div><div class="countdown-label">Minutes</div></div>
+                            <div class="countdown-item"><div class="countdown-value" id="${cdId}-s">00</div><div class="countdown-label">Seconds</div></div>
+                        </div>
+                    </div>` : '';
+                return `
+                <section style="padding-top:2rem;">
+                    <div class="cards">
+                        <div class="card">
+                            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem;flex-wrap:wrap;gap:1rem;">
+                                <h3>${escHtml(m.name)}</h3>
+                                <span class="${statusInfo.cls}">${statusInfo.label}</span>
+                            </div>
+                            <p style="color:#667eea;margin-bottom:0.5rem;">${escHtml(m.dateDisplay || '')}</p>
+                            ${countdownHtml}
+                            <p>${descHtml}</p>
+                            ${watchHtml}
+                        </div>
+                    </div>
+                </section>`;
+            }).join('');
+
+            // Start countdowns
+            missions.forEach(m => {
+                if (m.status === 'upcoming' && m.launchTimestamp) {
+                    startMissionCountdown(m.id, m.launchTimestamp);
+                }
+            });
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function startMissionCountdown(missionId, launchTs) {
+            const cdId = buildCountdownId(missionId);
+            let adjustedLaunch = launchTs;
+            let frozenDistance = null;
+
+            if (database) {
+                database.ref('countdown-hold').on('value', (snap) => {
+                    const hold = snap.val() || { isHeld: false, totalHoldDuration: 0 };
+                    if (hold.isHeld) {
+                        frozenDistance = hold.timeAtHold;
+                    } else {
+                        frozenDistance = null;
+                        adjustedLaunch = launchTs + (hold.totalHoldDuration || 0);
+                    }
+                });
+            }
+
+            const timer = setInterval(() => {
+                const distance = frozenDistance !== null ? frozenDistance : (adjustedLaunch - Date.now());
+                const isHeld = frozenDistance !== null;
+                const labelEl = document.getElementById(cdId + '-label');
+                const dEl = document.getElementById(cdId + '-d');
+                if (!dEl) { clearInterval(timer); return; }
+
+                const abs = Math.abs(distance);
+                const d = Math.floor(abs / 86400000);
+                const h = Math.floor((abs % 86400000) / 3600000);
+                const mn = Math.floor((abs % 3600000) / 60000);
+                const s = Math.floor((abs % 60000) / 1000);
+                const pad = n => String(n).padStart(2,'0');
+                document.getElementById(cdId+'-d').textContent = pad(d);
+                document.getElementById(cdId+'-h').textContent = pad(h);
+                document.getElementById(cdId+'-m').textContent = pad(mn);
+                document.getElementById(cdId+'-s').textContent = pad(s);
+                if (labelEl) {
+                    if (isHeld) { labelEl.textContent = 'T- (HOLD)'; labelEl.style.color = '#ff6b6b'; }
+                    else if (distance >= 0) { labelEl.textContent = 'T-'; labelEl.style.color = '#667eea'; }
+                    else { labelEl.textContent = 'T+'; labelEl.style.color = '#4ecdc4'; }
+                }
+            }, 1000);
+            countdownTimers[missionId] = timer;
+        }
+
+        function loadMissions() {
+            if (!database) return;
+            database.ref('missions').orderByChild('order').on('value', (snapshot) => {
+                const missions = [];
+                snapshot.forEach(child => {
+                    missions.push({ id: child.key, ...child.val() });
+                });
+                renderMissions(missions);
+            });
+        }
+
+        // =====================================================================
+        // ADMIN PANEL — MISSION CRUD
+        // =====================================================================
+        function openAdminPanel() {
+            document.getElementById('admin-panel').style.display = 'block';
+            refreshAdminMissionList();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('admin-panel').style.display = 'none';
+            clearForm();
+        }
+
+        function refreshAdminMissionList() {
+            if (!database) return;
+            database.ref('missions').orderByChild('order').once('value').then(snapshot => {
+                const list = document.getElementById('admin-mission-list');
+                let html = '<div style="margin-bottom:1rem;"><h3 style="color:#888;font-size:1rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">Existing Missions</h3>';
+                snapshot.forEach(child => {
+                    const m = child.val();
+                    const statusInfo = STATUS_MAP[m.status] || STATUS_MAP['upcoming'];
+                    html += `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1rem 1.2rem;margin-bottom:0.6rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                        <div>
+                            <span style="font-weight:700;">${escHtml(m.name)}</span>
+                            <span class="${statusInfo.cls}" style="margin-left:0.8rem;font-size:0.75rem;">${statusInfo.label}</span>
+                            <span style="color:#666;font-size:0.8rem;margin-left:0.5rem;">#${m.order}</span>
+                        </div>
+                        <div style="display:flex;gap:0.5rem;">
+                            <button onclick="editMission('${child.key}')" style="background:rgba(102,126,234,0.2);border:1px solid rgba(102,126,234,0.4);color:#667eea;padding:0.4rem 1rem;border-radius:50px;cursor:pointer;font-size:0.85rem;">Edit</button>
+                            <button onclick="deleteMission('${child.key}','${escHtml(m.name)}')" style="background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.4);color:#ff6b6b;padding:0.4rem 1rem;border-radius:50px;cursor:pointer;font-size:0.85rem;">Delete</button>
+                        </div>
+                    </div>`;
+                });
+                if (!snapshot.exists()) html += '<p style="color:#666;">No missions yet.</p>';
+                html += '</div>';
+                list.innerHTML = html;
+            });
+        }
+
+        function editMission(id) {
+            if (!database) return;
+            database.ref('missions/' + id).once('value').then(snap => {
+                const m = snap.val();
+                document.getElementById('edit-mission-id').value = id;
+                document.getElementById('f-name').value = m.name || '';
+                document.getElementById('f-date-display').value = m.dateDisplay || '';
+                document.getElementById('f-status').value = m.status || 'upcoming';
+                document.getElementById('f-desc').value = (m.description || '').replace(/<br>/g, '\n');
+                document.getElementById('f-watch-url').value = m.watchUrl || '';
+                document.getElementById('f-watch-label').value = m.watchLabel || '';
+                document.getElementById('f-order').value = m.order != null ? m.order : 100;
+                if (m.launchTimestamp) {
+                    const dt = new Date(m.launchTimestamp);
+                    // datetime-local format: YYYY-MM-DDTHH:mm
+                    const local = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0,16);
+                    document.getElementById('f-launch-ts').value = local;
+                } else {
+                    document.getElementById('f-launch-ts').value = '';
+                }
+                document.getElementById('form-title').textContent = '✏️ Edit Mission';
+                document.getElementById('f-name').focus();
+            });
+        }
+
+        function saveMission() {
+            if (!database) return;
+            const id = document.getElementById('edit-mission-id').value;
+            const name = document.getElementById('f-name').value.trim();
+            if (!name) { alert('Mission name is required.'); return; }
+
+            const launchTsRaw = document.getElementById('f-launch-ts').value;
+            const launchTimestamp = launchTsRaw ? new Date(launchTsRaw).getTime() : null;
+
+            const data = {
+                name,
+                dateDisplay: document.getElementById('f-date-display').value.trim(),
+                status: document.getElementById('f-status').value,
+                description: document.getElementById('f-desc').value.trim(),
+                watchUrl: document.getElementById('f-watch-url').value.trim(),
+                watchLabel: document.getElementById('f-watch-label').value.trim(),
+                order: parseInt(document.getElementById('f-order').value) || 100,
+                launchTimestamp: launchTimestamp,
+            };
+
+            const ref = id ? database.ref('missions/' + id) : database.ref('missions').push();
+            ref.set(data).then(() => {
+                clearForm();
+                refreshAdminMissionList();
+            }).catch(err => alert('Save failed: ' + err.message));
+        }
+
+        function deleteMission(id, name) {
+            if (!confirm('Delete mission "' + name + '"?')) return;
+            database.ref('missions/' + id).remove().then(() => {
+                refreshAdminMissionList();
+            }).catch(err => alert('Delete failed: ' + err.message));
+        }
+
+        function clearForm() {
+            document.getElementById('edit-mission-id').value = '';
+            document.getElementById('f-name').value = '';
+            document.getElementById('f-date-display').value = '';
+            document.getElementById('f-launch-ts').value = '';
+            document.getElementById('f-status').value = 'upcoming';
+            document.getElementById('f-desc').value = '';
+            document.getElementById('f-watch-url').value = '';
+            document.getElementById('f-watch-label').value = '';
+            document.getElementById('f-order').value = '100';
+            document.getElementById('form-title').textContent = '➕ Add New Mission';
+        }
+
+        // Init
+        loadMissions();
+
+        // Handle initial hash navigation
+        const initialHash = window.location.hash.slice(1);
+        if (initialHash) {
+            const target = document.getElementById(initialHash + '-page');
+            if (target) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                target.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
