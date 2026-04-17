@@ -1123,10 +1123,12 @@
 
         function buildCountdownId(missionId) { return 'cd-' + missionId; }
 
-        function renderMissions(missions) {
-            // Clear old timers
-            Object.values(countdownTimers).forEach(clearInterval);
-            countdownTimers = {};
+let lastMissionsJson = null;
+
+function renderMissions(missions) {
+    const newJson = JSON.stringify(missions);
+    if (newJson === lastMissionsJson) return; // nothing changed, skip
+    lastMissionsJson = newJson;
 
             const container = document.getElementById('missions-container');
             if (!missions || missions.length === 0) {
