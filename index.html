@@ -1182,47 +1182,67 @@
         }
 
         function startMissionCountdown(missionId, launchTs) {
-            const cdId = buildCountdownId(missionId);
-            let adjustedLaunch = launchTs;
-            let frozenDistance = null;
+    const cdId = buildCountdownId(missionId);
+    
+    // Hold state lives here, only updated by the listener
+    let holdState = { isHeld: false, totalHoldDuration: 0, frozenDistance: null };
 
-            if (database) {
-                database.ref('countdown-hold').on('value', (snap) => {
-                    const hold = snap.val() || { isHeld: false, totalHoldDuration: 0 };
-                    if (hold.isHeld) {
-                        frozenDistance = hold.timeAtHold;
-                    } else {
-                        frozenDistance = null;
-                        adjustedLaunch = launchTs + (hold.totalHoldDuration || 0);
-                    }
-                });
+    if (database) {
+        database.ref('countdown-hold').on('value', (snap) => {
+            const hold = snap.val() || { isHeld: false, totalHoldDuration: 0 };
+            if (hold.isHeld) {
+                holdState = {
+                    isHeld: true,
+                    totalHoldDuration: hold.totalHoldDuration || 0,
+                    frozenDistance: hold.timeAtHold
+                };
+            } else {
+                holdState = {
+                    isHeld: false,
+                    totalHoldDuration: hold.totalHoldDuration || 0,
+                    frozenDistance: null
+                };
             }
+        });
+    }
 
-            const timer = setInterval(() => {
-                const distance = frozenDistance !== null ? frozenDistance : (adjustedLaunch - Date.now());
-                const isHeld = frozenDistance !== null;
-                const labelEl = document.getElementById(cdId + '-label');
-                const dEl = document.getElementById(cdId + '-d');
-                if (!dEl) { clearInterval(timer); return; }
+    const timer = setInterval(() => {
+        const adjustedLaunch = launchTs + holdState.totalHoldDuration;
+        const distance = holdState.isHeld
+            ? holdState.frozenDistance
+            : (adjustedLaunch - Date.now());
 
-                const abs = Math.abs(distance);
-                const d = Math.floor(abs / 86400000);
-                const h = Math.floor((abs % 86400000) / 3600000);
-                const mn = Math.floor((abs % 3600000) / 60000);
-                const s = Math.floor((abs % 60000) / 1000);
-                const pad = n => String(n).padStart(2,'0');
-                document.getElementById(cdId+'-d').textContent = pad(d);
-                document.getElementById(cdId+'-h').textContent = pad(h);
-                document.getElementById(cdId+'-m').textContent = pad(mn);
-                document.getElementById(cdId+'-s').textContent = pad(s);
-                if (labelEl) {
-                    if (isHeld) { labelEl.textContent = 'T- (HOLD)'; labelEl.style.color = '#ff6b6b'; }
-                    else if (distance >= 0) { labelEl.textContent = 'T-'; labelEl.style.color = '#667eea'; }
-                    else { labelEl.textContent = 'T+'; labelEl.style.color = '#4ecdc4'; }
-                }
-            }, 1000);
-            countdownTimers[missionId] = timer;
+        const labelEl = document.getElementById(cdId + '-label');
+        const dEl = document.getElementById(cdId + '-d');
+        if (!dEl) { clearInterval(timer); return; }
+
+        const abs = Math.abs(distance);
+        const d = Math.floor(abs / 86400000);
+        const h = Math.floor((abs % 86400000) / 3600000);
+        const mn = Math.floor((abs % 3600000) / 60000);
+        const s = Math.floor((abs % 60000) / 1000);
+        const pad = n => String(n).padStart(2, '0');
+        document.getElementById(cdId + '-d').textContent = pad(d);
+        document.getElementById(cdId + '-h').textContent = pad(h);
+        document.getElementById(cdId + '-m').textContent = pad(mn);
+        document.getElementById(cdId + '-s').textContent = pad(s);
+
+        if (labelEl) {
+            if (holdState.isHeld) {
+                labelEl.textContent = 'T- (HOLD)';
+                labelEl.style.color = '#ff6b6b';
+            } else if (distance >= 0) {
+                labelEl.textContent = 'T-';
+                labelEl.style.color = '#667eea';
+            } else {
+                labelEl.textContent = 'T+';
+                labelEl.style.color = '#4ecdc4';
+            }
         }
+    }, 1000);
+
+    countdownTimers[missionId] = timer;
+}
 
         function loadMissions() {
             if (!database) return;
