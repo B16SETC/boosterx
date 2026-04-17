@@ -656,88 +656,119 @@
         </ul>
     </nav>
 
-    <!-- HOME PAGE -->
-    <div id="home-page" class="page active">
-        <section class="hero">
-            <div class="hero-bg"></div>
-            <div class="hero-content">
-                <h1>Beyond the Horizon</h1>
-                <p>Advanced launch solutions for the next era of space exploration</p>
-                <button class="cta-button" onclick="goToPage('contact')">Get in Touch</button>
-            </div>
-        </section>
+<!-- HOME PAGE -->
+<div id="home-page" class="page active">
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Beyond the Horizon</h1>
+            <p>Advanced launch solutions for the next era of space exploration</p>
+            <button class="cta-button" onclick="goToPage('launches')">View Launch Manifest</button>
+        </div>
+    </section>
 
-        <section>
-            <h2 class="section-title">Launch Services</h2>
-            <p class="section-subtitle">Precision. Reliability. Innovation.</p>
-            <div class="cards">
-                <div class="card">
-                    <div class="card-icon">🚀</div>
-                    <h3>Heavy Lift</h3>
-                    <p>Deploy massive payloads to orbit with our next-generation heavy-lift vehicles. Optimized for large satellites, space station modules, and deep space missions.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🛰️</div>
-                    <h3>Satellite Deployment</h3>
-                    <p>Flexible launch windows and precise orbital insertion for communications, Earth observation, and scientific satellites of all sizes.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🌙</div>
-                    <h3>Deep Space Missions</h3>
-                    <p>Enabling exploration beyond Earth orbit with specialized launch profiles for lunar, Mars, and interplanetary missions.</p>
+    <section>
+        <h2 class="section-title">Next Launches</h2>
+        <p class="section-subtitle">Zenith Crewed In-Orbit Docking Test — April 18, 2026</p>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">🚀</div>
+                <h3>Launch #1</h3>
+                <p>The first of two back-to-back launches for our historic crewed docking test. Two Zenith crew capsules will rendezvous and dock in orbit for the first time.</p>
+                <div style="margin-top:1.5rem;">
+                    <button class="cta-button" style="font-size:0.95rem;padding:0.8rem 2rem;" onclick="goToPage('launches')">View Countdown</button>
                 </div>
             </div>
-        </section>
+            <div class="card">
+                <div class="card-icon">🛸</div>
+                <h3>Launch #2</h3>
+                <p>The second Zenith capsule launches two hours after the first, rendezvousing in orbit to complete the first crewed docking maneuver in our company's history.</p>
+                <div style="margin-top:1.5rem;">
+                    <button class="cta-button" style="font-size:0.95rem;padding:0.8rem 2rem;" onclick="goToPage('launches')">View Countdown</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section>
-            <h2 class="section-title">Advanced Rocket Technology</h2>
-            <p class="section-subtitle">Engineering the impossible into reality</p>
-            <div class="tech-grid">
-                <div class="tech-item">
-                    <h4>Reusable Systems</h4>
-                    <div class="stat">100%</div>
-                    <p>First-stage recovery rate</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Payload Capacity</h4>
-                    <div class="stat">75t</div>
-                    <p>To low Earth orbit</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Launch Cadence</h4>
-                    <div class="stat">48+</div>
-                    <p>Launches per year</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Propulsion</h4>
-                    <div class="stat">99.8%</div>
-                    <p>Engine reliability</p>
-                </div>
+    <section>
+        <h2 class="section-title">Latest Achievement</h2>
+        <p class="section-subtitle">SkyLynx-1 Socrates Mission — Mars Landing</p>
+        <div class="cards">
+            <div class="card" style="grid-column: 1 / -1; max-width: 800px; margin: 0 auto;">
+                <div class="card-icon">🔴</div>
+                <h3>We Reached Mars</h3>
+                <p style="margin-bottom:1rem;">Our ninth SkyLynx-1 mission successfully delivered the Socrates reentry module to Mars. After a long journey around the Sun and a trajectory correction burn, Socrates survived reentry, deployed its parachute, and landed — sending back high-quality images of the Martian surface.</p>
+                <span class="mission-badge-success">Mission Success</span>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section>
-            <h2 class="section-title">Research & Development</h2>
-            <p class="section-subtitle">Pioneering tomorrow's space technologies</p>
-            <div class="cards">
-                <div class="card">
-                    <div class="card-icon">🔬</div>
-                    <h3>Advanced Propulsion</h3>
-                    <p>Developing next-generation engine technologies including methane-oxygen systems and electric propulsion for deep space exploration.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🤖</div>
-                    <h3>Autonomous Systems</h3>
-                    <p>AI-driven launch sequencing, real-time trajectory optimization, and automated landing systems for maximum precision and safety.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">♻️</div>
-                    <h3>Sustainable Spaceflight</h3>
-                    <p>Researching carbon-neutral propellants, in-orbit refueling technologies, and closed-loop life support systems for long-duration missions.</p>
+    <section>
+        <h2 class="section-title">By The Numbers</h2>
+        <p class="section-subtitle">Our track record so far</p>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <h4>Total Missions</h4>
+                <div class="stat">13</div>
+                <p>Launches flown to date</p>
+            </div>
+            <div class="tech-item">
+                <h4>Mission Success</h4>
+                <div class="stat">5</div>
+                <p>Full mission successes</p>
+            </div>
+            <div class="tech-item">
+                <h4>Destinations</h4>
+                <div class="stat">2</div>
+                <p>Earth orbit &amp; Mars</p>
+            </div>
+            <div class="tech-item">
+                <h4>Active Vehicles</h4>
+                <div class="stat">2</div>
+                <p>SkyLynx-1 &amp; SkyLynx-M</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">Our Fleet</h2>
+        <p class="section-subtitle">Built for performance, designed for reuse</p>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">🚀</div>
+                <h3>SkyLynx-1</h3>
+                <p>Our workhorse light-lift vehicle. 9 flights flown, capable of ~25 tons to LEO, and has already reached Mars with the Socrates mission.</p>
+                <div style="margin-top:1.5rem;">
+                    <button class="cta-button" style="font-size:0.95rem;padding:0.8rem 2rem;" onclick="goToPage('vehicles')">Learn More</button>
                 </div>
             </div>
-        </section>
-    </div>
+            <div class="card">
+                <div class="card-icon">♻️</div>
+                <h3>SkyLynx-M</h3>
+                <p>Our fully reusable next-generation launch vehicle. Two flight tests completed, both achieving partial success as we refine booster and upper stage recovery.</p>
+                <div style="margin-top:1.5rem;">
+                    <button class="cta-button" style="font-size:0.95rem;padding:0.8rem 2rem;" onclick="goToPage('vehicles')">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">Watch Live</h2>
+        <p class="section-subtitle">Follow every launch in real time</p>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">📡</div>
+                <h3>Tune In</h3>
+                <p>All upcoming launches are streamed live. Watch countdowns, liftoff, stage separation, and payload deployment as they happen.</p>
+                <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+                    <a href="https://www.twitch.tv/boostersixteensetcorp" target="_blank" class="cta-button" style="font-size:0.95rem;padding:0.8rem 2rem;">Twitch</a>
+                    <a href="https://www.youtube.com/@superheavybooster-booster16" target="_blank" class="cta-button" style="font-size:0.95rem;padding:0.8rem 2rem;background:linear-gradient(135deg,#ff0000,#cc0000);">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 
     <!-- VEHICLES PAGE -->
     <div id="vehicles-page" class="page">
