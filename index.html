@@ -137,6 +137,8 @@
         .mission-badge-failure { background: linear-gradient(135deg, #ff0000 0%, #764ba2 100%); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; }
         .mission-badge-success { background: linear-gradient(135deg, #48ff00 0%, #764ba2 100%); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; }
         .mission-badge-partial-success { background: linear-gradient(135deg, #ffee00 0%, #764ba2 100%); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; }
+        .mission-badge-in-progress { background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; animation: badge-pulse 1.5s ease-in-out infinite; }
+        @keyframes badge-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,140,0,0.5); } 50% { box-shadow: 0 0 0 6px rgba(255,140,0,0); } }
         .countdown-container { margin: 2rem 0; text-align: center; }
         .countdown { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; flex-wrap: wrap; }
         .countdown-item { background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border: 1px solid rgba(102,126,234,0.3); border-radius: 12px; padding: 1.5rem 2rem; min-width: 100px; }
@@ -489,6 +491,7 @@
         // ── Mission rendering ────────────────────────────────────────────────
         const STATUS_MAP = {
             'upcoming':        { label: 'Upcoming',                    cls: 'mission-badge' },
+            'in-progress':     { label: '🔴 LIVE — In Progress',       cls: 'mission-badge-in-progress' },
             'success':         { label: 'Completed | Success',         cls: 'mission-badge-success' },
             'partial-success': { label: 'Completed | Partial Success', cls: 'mission-badge-partial-success' },
             'failure':         { label: 'Completed | Failure',         cls: 'mission-badge-failure' },
@@ -519,7 +522,7 @@
 
             container.innerHTML = missions.map(m => {
                 const statusInfo = STATUS_MAP[m.status] || STATUS_MAP['upcoming'];
-                const hasCountdown = m.status === 'upcoming' && m.launchTimestamp;
+                const hasCountdown = (m.status === 'upcoming' || m.status === 'in-progress') && m.launchTimestamp;
                 const cdId = buildCountdownId(m.id);
                 const descHtml = (m.description || '').replace(/\n/g, '<br>');
                 const watchHtml = m.watchUrl
@@ -553,7 +556,7 @@
             }).join('');
 
             missions.forEach(m => {
-                if (m.status === 'upcoming' && m.launchTimestamp) {
+                if ((m.status === 'upcoming' || m.status === 'in-progress') && m.launchTimestamp) {
                     startMissionCountdown(m.id, m.launchTimestamp);
                 }
             });
