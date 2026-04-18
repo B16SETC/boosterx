@@ -504,7 +504,6 @@
         }
 
         function renderMissions(missions) {
-            // Skip re-render if data hasn't changed
             const newJson = JSON.stringify(missions);
             if (newJson === lastMissionsJson) return;
             lastMissionsJson = newJson;
@@ -562,30 +561,57 @@
 
         function startMissionCountdown(missionId, launchTs) {
             const cdId = buildCountdownId(missionId);
+
+            // ── FIX 1: Each mission listens to its OWN hold key ──────────────
+            // ── FIX 2: holdState is fully initialised before the interval runs,
+            //           so distance is never computed from null (no more NaN).  ─
             let holdState = { isHeld: false, totalHoldDuration: 0, frozenDistance: null };
 
-            database.ref('countdown-hold').on('value', (snap) => {
+            database.ref('countdown-hold-' + missionId).on('value', (snap) => {
                 const hold = snap.val() || { isHeld: false, totalHoldDuration: 0 };
+
                 if (hold.isHeld) {
-                    holdState = { isHeld: true, totalHoldDuration: hold.totalHoldDuration || 0, frozenDistance: hold.timeAtHold };
+                    // frozenDistance is written by the admin the moment Hold is triggered,
+                    // so it is always a valid number — never null.
+                    holdState = {
+                        isHeld: true,
+                        totalHoldDuration: hold.totalHoldDuration || 0,
+                        frozenDistance: (typeof hold.timeAtHold === 'number') ? hold.timeAtHold : null,
+                    };
                 } else {
-                    holdState = { isHeld: false, totalHoldDuration: hold.totalHoldDuration || 0, frozenDistance: null };
+                    holdState = {
+                        isHeld: false,
+                        totalHoldDuration: hold.totalHoldDuration || 0,
+                        frozenDistance: null,
+                    };
                 }
             });
 
             const timer = setInterval(() => {
-                const adjustedLaunch = launchTs + holdState.totalHoldDuration;
-                const distance = holdState.isHeld ? holdState.frozenDistance : (adjustedLaunch - Date.now());
-
                 const labelEl = document.getElementById(cdId + '-label');
-                const dEl = document.getElementById(cdId + '-d');
+                const dEl     = document.getElementById(cdId + '-d');
                 if (!dEl) { clearInterval(timer); return; }
 
+                // Compute the adjusted launch time (shifted forward by accumulated hold)
+                const adjustedLaunch = launchTs + holdState.totalHoldDuration;
+
+                let distance;
+                if (holdState.isHeld && typeof holdState.frozenDistance === 'number') {
+                    // Frozen — show the exact ms remaining at the moment Hold was pressed
+                    distance = holdState.frozenDistance;
+                } else if (!holdState.isHeld) {
+                    // Normal countdown
+                    distance = adjustedLaunch - Date.now();
+                } else {
+                    // isHeld but frozenDistance not yet received from the server — keep last value
+                    return;
+                }
+
                 const abs = Math.abs(distance);
-                const d = Math.floor(abs / 86400000);
-                const h = Math.floor((abs % 86400000) / 3600000);
-                const mn = Math.floor((abs % 3600000) / 60000);
-                const s = Math.floor((abs % 60000) / 1000);
+                const d  = Math.floor(abs / 86400000);
+                const h  = Math.floor((abs % 86400000) / 3600000);
+                const mn = Math.floor((abs % 3600000)  / 60000);
+                const s  = Math.floor((abs % 60000)    / 1000);
                 const pad = n => String(n).padStart(2, '0');
 
                 document.getElementById(cdId + '-d').textContent = pad(d);
@@ -594,9 +620,9 @@
                 document.getElementById(cdId + '-s').textContent = pad(s);
 
                 if (labelEl) {
-                    if (holdState.isHeld) { labelEl.textContent = 'T- (HOLD)'; labelEl.style.color = '#ff6b6b'; }
-                    else if (distance >= 0) { labelEl.textContent = 'T-'; labelEl.style.color = '#667eea'; }
-                    else { labelEl.textContent = 'T+'; labelEl.style.color = '#4ecdc4'; }
+                    if (holdState.isHeld)   { labelEl.textContent = 'T- (HOLD)'; labelEl.style.color = '#ff6b6b'; }
+                    else if (distance >= 0) { labelEl.textContent = 'T-';        labelEl.style.color = '#667eea'; }
+                    else                    { labelEl.textContent = 'T+';        labelEl.style.color = '#4ecdc4'; }
                 }
             }, 1000);
 
