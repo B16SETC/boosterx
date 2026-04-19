@@ -157,6 +157,102 @@
             .logo { font-size: 1.1rem; }
             .page-hero { padding: 10rem 5% 4rem; }
         }
+
+        /* ── CAMERAS PAGE ── */
+        .camera-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .camera-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+        }
+        .camera-card:hover { transform: translateY(-6px); border-color: rgba(102,126,234,0.5); box-shadow: 0 16px 48px rgba(102,126,234,0.25); }
+        .camera-thumb {
+            width: 100%; aspect-ratio: 16/9;
+            background: rgba(102,126,234,0.08);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .camera-thumb::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+        }
+        .camera-live-dot {
+            position: absolute; top: 10px; left: 10px;
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+            border-radius: 20px; padding: 4px 10px;
+            font-size: 0.75rem; font-weight: 700; color: #ff4444;
+            letter-spacing: 1px; z-index: 2;
+        }
+        .camera-live-dot::before {
+            content: ''; width: 7px; height: 7px; border-radius: 50%;
+            background: #ff4444;
+            animation: livePulse 1.2s ease-in-out infinite;
+        }
+        @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .camera-info { padding: 1.2rem 1.5rem; }
+        .camera-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .camera-desc { color: #888; font-size: 0.9rem; }
+        .camera-open-hint {
+            display: flex; align-items: center; gap: 6px;
+            color: #667eea; font-size: 0.85rem; font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        /* Viewer modal */
+        #camera-modal {
+            display: none; position: fixed; inset: 0; z-index: 2000;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(8px);
+            align-items: center; justify-content: center;
+            padding: 1.5rem;
+        }
+        #camera-modal.open { display: flex; animation: fadeIn 0.2s ease-out; }
+        .camera-modal-inner {
+            width: 100%; max-width: 1280px;
+            background: #0a0a0a;
+            border: 1px solid rgba(102,126,234,0.3);
+            border-radius: 16px; overflow: hidden;
+            display: flex; flex-direction: column;
+            max-height: 90vh;
+        }
+        .camera-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+        .camera-modal-title { font-size: 1rem; font-weight: 700; color: #fff; }
+        .camera-modal-close {
+            background: none; border: 1px solid rgba(255,255,255,0.15);
+            color: #fff; border-radius: 8px; padding: 6px 14px;
+            cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+        }
+        .camera-modal-close:hover { border-color: #667eea; color: #667eea; }
+        #camera-iframe {
+            width: 100%; aspect-ratio: 16/9;
+            border: none; flex-shrink: 0;
+            background: #000;
+        }
+        .cameras-offline {
+            text-align: center; padding: 6rem 2rem;
+            color: #555;
+        }
+        .cameras-offline .offline-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .cameras-offline p { font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -171,6 +267,7 @@
             <li><a onclick="goToPage('home')">Home</a></li>
             <li><a onclick="goToPage('vehicles')">Vehicles</a></li>
             <li><a onclick="goToPage('launches')">Launches</a></li>
+            <li id="nav-cameras" style="display:none"><a onclick="goToPage('cameras')" style="color:#ff6b6b;">📡 Live Cameras</a></li>
             <li><a onclick="goToPage('contact')">Contact</a></li>
         </ul>
     </nav>
@@ -364,6 +461,33 @@
                 ⏱️ <strong>We typically respond within 24 hours</strong>
             </div>
         </section>
+    </div>
+
+    <!-- CAMERAS PAGE -->
+    <div id="cameras-page" class="page">
+        <div class="page-hero">
+            <h1>Live Cameras</h1>
+            <p class="section-subtitle">Real-time HullCam feeds from the active mission</p>
+        </div>
+        <section style="padding-top: 2rem;">
+            <div id="cameras-container">
+                <div class="cameras-offline">
+                    <div class="offline-icon">📡</div>
+                    <p>Loading camera feeds...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CAMERA VIEWER MODAL -->
+    <div id="camera-modal">
+        <div class="camera-modal-inner">
+            <div class="camera-modal-header">
+                <div class="camera-modal-title" id="camera-modal-title">Camera</div>
+                <button class="camera-modal-close" onclick="closeCamera()">✕ Close</button>
+            </div>
+            <iframe id="camera-iframe" src="" allowfullscreen></iframe>
+        </div>
     </div>
 
     <footer>
@@ -641,6 +765,79 @@
         }
 
         loadMissions();
+
+        // ── Cameras ─────────────────────────────────────────────────────────
+        let camerasConfig = null;
+
+        function renderCameras(config) {
+            camerasConfig = config;
+            const navEl = document.getElementById('nav-cameras');
+            const container = document.getElementById('cameras-container');
+
+            if (!config || !config.enabled) {
+                navEl.style.display = 'none';
+                container.innerHTML = `
+                    <div class="cameras-offline">
+                        <div class="offline-icon">📡</div>
+                        <p>Camera feeds are not available right now.<br>Check back during a live stream.</p>
+                    </div>`;
+                return;
+            }
+
+            navEl.style.display = 'block';
+
+            const cameras = config.cameras || {};
+            const list = Object.values(cameras).filter(c => c && c.name);
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="cameras-offline">
+                        <div class="offline-icon">🎥</div>
+                        <p>No cameras configured yet.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = `<div class="camera-grid">${list.map(cam => `
+                <div class="camera-card" onclick="openCamera(${JSON.stringify(cam.name).replace(/"/g, '&quot;')}, ${JSON.stringify(cam.id).replace(/"/g, '&quot;')})">
+                    <div class="camera-thumb">
+                        📷
+                        <div class="camera-live-dot">LIVE</div>
+                    </div>
+                    <div class="camera-info">
+                        <div class="camera-name">${escHtml(cam.name)}</div>
+                        ${cam.desc ? `<div class="camera-desc">${escHtml(cam.desc)}</div>` : ''}
+                        <div class="camera-open-hint">▶ Click to view</div>
+                    </div>
+                </div>`).join('')}
+            </div>`;
+        }
+
+        function openCamera(name, id) {
+            const tunnelUrl = camerasConfig?.tunnelUrl || '';
+            if (!tunnelUrl) return;
+            document.getElementById('camera-modal-title').textContent = name;
+            document.getElementById('camera-iframe').src = tunnelUrl + '/viewer.html?id=' + encodeURIComponent(id);
+            document.getElementById('camera-modal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCamera() {
+            document.getElementById('camera-modal').classList.remove('open');
+            document.getElementById('camera-iframe').src = '';
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('camera-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeCamera();
+        });
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCamera(); });
+
+        // Poll cameras config
+        database.ref('cameras').on('value', snap => {
+            renderCameras(snap.val());
+        });
 
         const initialHash = window.location.hash.slice(1);
         if (initialHash) {
